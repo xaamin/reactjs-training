@@ -34,3 +34,23 @@
 .footer {
   background: #61dafb;
 }
+
+.product-list-item {
+  max-width: 33.33333%;
+  float: left;
+  margin-bottom: 25px;
+}
+
+.input-search {
+  clear: both;
+  width: calc(100% - 35px);
+  margin-bottom: 30px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 28px;
+  padding-left: 15px;
+}
+
+.favorite {
+  background: #512DA8
+}
