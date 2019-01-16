@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
-import ActionButton from './components/ActionButton'
 import Cart from './cart/Cart'
 import SearchBar from './components/SearchBar';
 import Products from './products/Products';
 
 let COUNTERS = {}
 
-const count = (instance) => {
+
+let debounce;
+
+console.count = (instance) => {
   const name = instance.name || instance.constructor.name;
 
   if (!COUNTERS[name]) {
@@ -18,10 +19,20 @@ const count = (instance) => {
 
   COUNTERS[name] = COUNTERS[name] + 1;
 
-  console.log('COUNTERS', COUNTERS);
+  if (debounce) {
+    clearTimeout(debounce);
+  }
+
+  debounce = setTimeout(() => {
+    console.group('COUNTERS');
+    console.log({ ...COUNTERS });
+    console.groupEnd();
+
+    COUNTERS = {};
+  }, 300)
 }
 
-const available = [
+let available = [
   {
     id: 1,
     name: 'Apple',
@@ -71,6 +82,7 @@ const available = [
     favorite: false,
   }
 ];
+
 
 class App extends Component {
 
@@ -134,6 +146,8 @@ class App extends Component {
   handleAddItem(item) {
     const products = this.state.products.map((product) => {
       if (product.id === item.id) {
+        product = { ...product };
+
         product.quantity++;
         product.price = product.quantity * product.unit_price;
 
@@ -150,6 +164,8 @@ class App extends Component {
   handleRemoveItem(item) {
     const products = this.state.products.map((product) => {
       if (product.id === item.id) {
+        product = { ...product };
+
         product.quantity--;
         product.price = product.quantity * product.unit_price;
       }
@@ -209,8 +225,10 @@ class App extends Component {
   }
 
   handleMarkAsFavorite(item) {
-    available.map((product) => {
+    available = available.map((product) => {
       if (product.id === item.id) {
+        product = { ...product };
+
         product.favorite = !product.favorite;
       }
 
@@ -228,7 +246,7 @@ class App extends Component {
     const list = this.getProducts();
     const { products } = this.state;
 
-    count(this);
+    console.count(this);
 
     return (
       <div className="App">

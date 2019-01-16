@@ -2,8 +2,14 @@ import React, { Component } from 'react'
 import ActionButton from '../components/ActionButton';
 
 export class CartItem extends Component {
+  shouldComponentUpdate(nextProps) {
+    return nextProps.product !== this.props.product;
+  }
+
   render() {
     const { product } = this.props;
+
+    console.count(this);
     
     return (
       <tr>

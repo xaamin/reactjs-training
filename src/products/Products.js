@@ -1,33 +1,18 @@
-import React, { Component } from 'react'
-import ProductListItem from './ProductListItem';
+import React, { PureComponent } from 'react'
+import ProductList from './ProductList';
 
-export class Products extends Component {
-  constructor(props) {
-    super(props);
-
-    this.renderProductListItem = this.renderProductListItem.bind(this);
-  }
-
-  renderProductListItem(product) {
-    const { onAddToCart, onMarkAsFavorite } = this.props;
-
-    return (
-      <ProductListItem
-        product={ product }
-        onAddToCart={ onAddToCart }
-        onMarkAsFavorite={ onMarkAsFavorite } />
-    )
-  }
-
+export class Products extends PureComponent {
   render() {
-    const { products } = this.props;
+    const { products, onAddToCart, onMarkAsFavorite } = this.props;
+
+    console.count(this);
 
     return (
-      <div>
-        {
-          products.map(this.renderProductListItem)
-        }
-      </div>
+      <ProductList
+        products={ products }
+        onAddToCart={ onAddToCart }
+        onMarkAsFavorite={ onMarkAsFavorite }
+      />
     )
   }
 }

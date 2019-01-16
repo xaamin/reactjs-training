@@ -9,6 +9,10 @@ export class ProductListItem extends Component {
     this.markAsFavorite = this.markAsFavorite.bind(this);
   }
 
+  shouldComponentUpdate(nextProps) {
+    return nextProps.product.favorite !== this.props.product.favorite;
+  }
+
   addToCart() {
     const { product } = this.props;
 
@@ -23,6 +27,8 @@ export class ProductListItem extends Component {
 
   render() {
     const { product } = this.props;
+
+    console.count(this);
 
     return (
       <div key={ product.id } className="product-list-item">

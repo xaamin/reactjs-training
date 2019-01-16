@@ -1,11 +1,13 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import CartList from './CartList';
 import CartCheckOut from './CartCheckOut';
 
-export class Cart extends Component {
+export class Cart extends PureComponent {
   render() {
     const { products, onAdd, onRemove, onDelete } = this.props;
 
+    console.count(this);
+    
     return (
       <div>
         <h4>Cart</h4>

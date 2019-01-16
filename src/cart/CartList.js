@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import CartItem from './CartItem';
 
-export class CartList extends Component {
+export class CartList extends PureComponent {
 
 	constructor(props) {
 		super(props);
@@ -15,6 +15,7 @@ export class CartList extends Component {
 
     return (
       <CartItem
+        key={ product.id }
         product={ product }
         onAdd={ onAdd }
         onRemove={ onRemove }
@@ -35,7 +36,9 @@ export class CartList extends Component {
   }
 
   render() {
-		const { products } = this.props;
+    const { products } = this.props;
+    
+    console.count(this);
 
     return (
     	<table>

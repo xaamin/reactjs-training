@@ -8,6 +8,10 @@ class ActionButton extends Component {
         this.handleClick = this.handleClick.bind(this);
     }
 
+    shouldComponentUpdate() {
+        return false;
+    }
+
     handleClick() {
         const { data } = this.props;
 
@@ -15,9 +19,9 @@ class ActionButton extends Component {
     }
 
     render() {
-        console.log('PROPS', this.props)
-
         const { name, text } = this.props;
+
+        console.count(this);
 
         return (
             <button { ...this.props } name={ name } onClick={ this.handleClick }>
