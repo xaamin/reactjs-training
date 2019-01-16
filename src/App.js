@@ -4,7 +4,8 @@ import './App.css';
 
 import ActionButton from './components/ActionButton'
 import Cart from './cart/Cart'
-import SearchBar from './cart/SearchBar';
+import SearchBar from './components/SearchBar';
+import Products from './products/Products';
 
 let COUNTERS = {}
 
@@ -93,9 +94,8 @@ class App extends Component {
     this.handleAddItem = this.handleAddItem.bind(this);
     this.handleRemoveItem = this.handleRemoveItem.bind(this)
     this.handleDeleteItem = this.handleDeleteItem.bind(this);
-    this.renderProductListItem = this.renderProductListItem.bind(this);
-    this.addToCart = this.addToCart.bind(this);
-    this.markAsFavorite = this.markAsFavorite.bind(this);
+    this.handleAddToCart = this.handleAddToCart.bind(this);
+    this.handleMarkAsFavorite = this.handleMarkAsFavorite.bind(this);
   }
 
   componentWillMount() {
@@ -174,7 +174,7 @@ class App extends Component {
     })
   }
 
-  addToCart(product) {
+  handleAddToCart(product) {
     const found = this.state.products.find((item) => product.id === item.id)
 
     if (!found) {
@@ -208,7 +208,7 @@ class App extends Component {
     })
   }
 
-  markAsFavorite(item) {
+  handleMarkAsFavorite(item) {
     available.map((product) => {
       if (product.id === item.id) {
         product.favorite = !product.favorite;
@@ -224,22 +224,6 @@ class App extends Component {
     })
   }
 
-  renderProductListItem(product) {
-    return (
-      <div key={ product.id } className="product-list-item">
-        <img src="https://via.placeholder.com/150" />
-        <h4>{ product.name }</h4>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        </p>
-        <div>
-          <ActionButton type="button" name="favorite" text="Favorito" data={ product } className={ product.favorite ? 'favorite' : '' } onClick={ this.markAsFavorite } />
-          <ActionButton type="button" name="add-to-cart" text="Agregar" data={ product } onClick={ this.addToCart } />
-        </div>
-      </div>
-    )
-  }
-
   render() {
     const list = this.getProducts();
     const { products } = this.state;
@@ -253,18 +237,20 @@ class App extends Component {
           onAdd={ this.handleAddItem }
           onRemove={ this.handleRemoveItem }
           onDelete={ this.handleDeleteItem }
-          />
+        />
 
         <hr />
 
         <div>
           <SearchBar onInputTextChange={ this.handleSearch } />
-          
-          <div>
-            {
-              list.map(this.renderProductListItem)
-            }
-          </div>
+        </div>
+        
+        <div>
+          <Products
+            products={ list }
+            onAddToCart={ this.handleAddToCart }
+            onMarkAsFavorite={ this.handleMarkAsFavorite }
+          />
         </div>
       </div>
     );
