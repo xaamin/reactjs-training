@@ -20,7 +20,7 @@ class ActionButton extends Component {
         const { name, text } = this.props;
 
         return (
-            <button type="button" name={ name } onClick={ this.handleClick }>
+            <button { ...this.props } name={ name } onClick={ this.handleClick }>
                 { text }
             </button>
         )

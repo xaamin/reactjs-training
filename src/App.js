@@ -3,6 +3,8 @@ import logo from './logo.svg';
 import './App.css';
 
 import ActionButton from './components/ActionButton'
+import Cart from './cart/Cart'
+import SearchBar from './cart/SearchBar';
 
 let COUNTERS = {}
 
@@ -87,9 +89,13 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.search = this.search.bind(this);
-    this.addItem = this.addItem.bind(this);
-    this.substractItem = this.substractItem.bind(this)
+    this.handleSearch = this.handleSearch.bind(this);
+    this.handleAddItem = this.handleAddItem.bind(this);
+    this.handleRemoveItem = this.handleRemoveItem.bind(this)
+    this.handleDeleteItem = this.handleDeleteItem.bind(this);
+    this.renderProductListItem = this.renderProductListItem.bind(this);
+    this.addToCart = this.addToCart.bind(this);
+    this.markAsFavorite = this.markAsFavorite.bind(this);
   }
 
   componentWillMount() {
@@ -125,19 +131,7 @@ class App extends Component {
     console.log('WILL UNMOUNT FIRED')
   }
 
-  removeItem(product) {
-    console.log('REQUESTING DELETE FOR ', product)
-
-    const products = this.state.products.filter((item) => {
-      return product.id != item.id;
-    })
-
-    this.setState({
-      products
-    })
-  }
-
-  addItem(item) {
+  handleAddItem(item) {
     const products = this.state.products.map((product) => {
       if (product.id === item.id) {
         product.quantity++;
@@ -153,7 +147,7 @@ class App extends Component {
     })
   }
 
-  substractItem(item) {
+  handleRemoveItem(item) {
     const products = this.state.products.map((product) => {
       if (product.id === item.id) {
         product.quantity--;
@@ -161,6 +155,18 @@ class App extends Component {
       }
 
       return product;
+    })
+
+    this.setState({
+      products
+    })
+  }
+
+  handleDeleteItem(product) {
+    console.log('REQUESTING DELETE FOR ', product)
+
+    const products = this.state.products.filter((item) => {
+      return product.id != item.id;
     })
 
     this.setState({
@@ -182,17 +188,7 @@ class App extends Component {
     }
   }
 
-  getTotal() {
-    let total = 0;
-
-    this.state.products.forEach((item) => {
-      total+= parseFloat(item.price) * parseFloat(item.quantity);
-    })
-
-    return total;
-  }
-
-  search(event) {
+  handleSearch(event) {
     const { name, value } = event.target;
 
     this.setState({
@@ -228,83 +224,46 @@ class App extends Component {
     })
   }
 
-  handleClick(data) {
-    alert(data)
+  renderProductListItem(product) {
+    return (
+      <div key={ product.id } className="product-list-item">
+        <img src="https://via.placeholder.com/150" />
+        <h4>{ product.name }</h4>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        </p>
+        <div>
+          <ActionButton type="button" name="favorite" text="Favorito" data={ product } className={ product.favorite ? 'favorite' : '' } onClick={ this.markAsFavorite } />
+          <ActionButton type="button" name="add-to-cart" text="Agregar" data={ product } onClick={ this.addToCart } />
+        </div>
+      </div>
+    )
   }
 
   render() {
-    const products = this.getProducts();
+    const list = this.getProducts();
+    const { products } = this.state;
 
     count(this);
 
-    const promise = new Promise((resolve, reject) => {
-
-    })
-
     return (
       <div className="App">
-        <h4>Cart</h4>
-
-        <ActionButton name="dummy" text="Dummy button" data="Hola" onClick={ this.handleClick } promise={ promise } />
-
-        <table>
-          <thead>
-            <tr>
-              <th>Item</th>
-              <th>Quantity</th>
-              <th>Price</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            { this.state.products.map((product) => (
-              <tr key={ product.id }>
-                <td>{ product.name }</td>
-                <td>
-                  <ActionButton type="button" name="substract" text="-" data={ product } onClick={ this.substractItem } />
-                  { product.quantity }
-                  <ActionButton type="button" name="add" text="+" data={ product } onClick={ this.addItem } />
-                </td>
-                <td>{ product.price }</td>
-                <td>
-                  <button type="button" onClick={ () => this.removeItem(product) }>
-                    X
-                  </button>
-                </td>
-              </tr>
-            )) }
-          </tbody>
-
-          <tfoot>
-            <tr>
-              <th colSpan="3" className="footer">
-                Total: ${ this.getTotal() }
-              </th>
-            </tr>
-          </tfoot>
-        </table>
+        <Cart
+          products={ products }
+          onAdd={ this.handleAddItem }
+          onRemove={ this.handleRemoveItem }
+          onDelete={ this.handleDeleteItem }
+          />
 
         <hr />
 
         <div>
-          <input type="text" name="search" autoComplete="off" className="input-search" placeholder="Search" onChange={ this.search } />
+          <SearchBar onInputTextChange={ this.handleSearch } />
+          
           <div>
             {
-              products.map((product) => (
-                <div key={ product.id } className="product-list-item">
-                  <img src="https://via.placeholder.com/150" />
-                  <h4>{ product.name }</h4>
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  </p>
-                  <div>
-                    <button type="button" className={ product.favorite ? 'favorite' : '' } onClick={ () => this.markAsFavorite(product) }>Favorito</button>
-                    <button type="button" onClick={ () => this.addToCart(product) }>Agregar</button>
-                  </div>
-                </div>
-              ))
+              list.map(this.renderProductListItem)
             }
-            
           </div>
         </div>
       </div>
